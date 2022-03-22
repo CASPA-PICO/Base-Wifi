@@ -16,7 +16,7 @@
 class ConnectToWifi
 {
 public:
-    ConnectToWifi(int show, int port, char *ipAdresse);
+    //ConnectToWifi(int show, int port, char *ipAdresse);
     ConnectToWifi();
 
     void Ssetup();

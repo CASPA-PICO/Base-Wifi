@@ -70,7 +70,7 @@ void ConnectToWifi::accespoint()
 						// Display the HTML web page
 						// Header
 						client.println("<!DOCTYPE html><html>");
-						client.println("<head><meta meta charset='UTF-8' name=\"webpage\" content=\"width=device-width, initial-scale=1\">");
+						client.println("<head><meta charset='UTF-8' name=\"webpage\" content=\"width=device-width, initial-scale=1\">");
 						// CSS to the style
 						client.println("<title>Caspa-PICO connexion</title>");
 						client.println("<style>html { font-family: Tahoma; display: flex; flex-direction: column; justify-content:center; margin: 2px auto; text-align: center; align-items: center;}");
@@ -81,13 +81,10 @@ void ConnectToWifi::accespoint()
 
 						// Web Page 
 						client.println("<body><h1>Caspa-PICO</h1><br><br><h2>Connexion des capteurs au wifi</h2>");
-						if (flagBadWIFI )
+						if (flagLoading)
 						{
-							client.println("<h3><p style=\"color:red;\">Erreur de connexion WIFI</p></h3>");
-							flagLoading=0;
-						}else if (flagLoading)
-						{
-							client.println("<h3><p style=\"color:green;\">Connexion au wifi en cours...</p></h3>");
+							client.println("<h3><p style=\"color:green;\">Vérifier la connection sur l'écran</p></h3>");
+							//client.println("<script>alert(\"Vérifier la connection sur l'écran, si il ne se connecte pas au bout d'une minute, veuillez rerentrée les donées\");</script>");
 						}
 
 						
@@ -95,17 +92,20 @@ void ConnectToWifi::accespoint()
 						client.print("<fieldset>Voici les réseaux disponibles à proximité, choisissez le votre :<br>");
 						client.print("<br><form action=\"/get\"> SSID: <select id=\"wifi\" name=\"inputSSID\">");
 
+						//nWifi = WiFi.scanNetworks();
 						for (int i = 0; i < nWifi; ++i)
 						{
 							// Print network found
 							Serial.print(i + 1);
 							Serial.print(": ");
-							Serial.println(WiFi.SSID(i));
-							cWifi = WiFi.SSID(i);
+							if(WiFi.SSID(i)!=NULL){
+								Serial.println(WiFi.SSID(i));
+								cWifi = WiFi.SSID(i);
 
-							client.println("<option>");
-							client.println(cWifi);
-							client.println("</options>");
+								client.println("<option>");
+								client.println(cWifi);
+								client.println("</options>");
+							}
 						}
 
 						client.println("</select>"); 
@@ -212,9 +212,10 @@ void ConnectToWifi::extractMDPSSID(int show)
 			Serial.println(MDP);
 			Serial.println("=====");
 		}
+		flagBadWIFI = 0;
+		flag = 1;
 	}
-	flagBadWIFI = 0;
-	flag = 1;
+	
 }
 
 void ConnectToWifi::setClient()
@@ -252,7 +253,7 @@ void ConnectToWifi::setClient()
 		Serial.print(".");
 		delay(500);
 		countWrongWifi++;
-		if (countWrongWifi > 10)
+		if (countWrongWifi > 5)
 		{
 			countWrongWifi =0;
 			MDP="";
@@ -261,7 +262,7 @@ void ConnectToWifi::setClient()
 			flag=0;
 			flagBadWIFI=1;
 			//Ssetup();
-			break;
+			return;
 		}
 	}
 		

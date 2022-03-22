@@ -39,9 +39,10 @@ public:
     const char *ssid = "Caspa-PICO Connect";
     const char *password = "Caspa123";
 
-    int flag = 1;
+    bool flag = 1;
     int countWrongWifi = 0;
-    int flagBadWIFI = 0;
+    bool flagBadWIFI = 0;
+    bool flagLoading =0;
 
     String IDwifi = "";
     String MDP = "";

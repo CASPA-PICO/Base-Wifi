@@ -72,7 +72,7 @@ void ConnectToWifi::accespoint()
 						client.println("<!DOCTYPE html><html>");
 						client.println("<head><meta meta charset='UTF-8' name=\"webpage\" content=\"width=device-width, initial-scale=1\">");
 						// CSS to the style
-						client.println("<title>Caspa-PICO Connection</title>");
+						client.println("<title>Caspa-PICO connexion</title>");
 						client.println("<style>html { font-family: Tahoma; display: flex; flex-direction: column; justify-content:center; margin: 2px auto; text-align: center; align-items: center;}");
 						client.println(".button { background-color: green; border: none; color: white; padding: 20px 48px;");
 						client.println("text-decoration: none; font-size: 30px; margin: 8px; cursor: pointer; border-radius: 40px;}");
@@ -80,11 +80,16 @@ void ConnectToWifi::accespoint()
 						client.println("</style></head>");
 
 						// Web Page 
-						client.println("<body><h1>Caspa-PICO</h1><br><br><h2>Connection des capteurs au wifi</h2>");
+						client.println("<body><h1>Caspa-PICO</h1><br><br><h2>Connexion des capteurs au wifi</h2>");
 						if (flagBadWIFI )
 						{
-							client.println("<h3><p style=\"color:red;\">Erreur de connection WIFI</p></h3>");
+							client.println("<h3><p style=\"color:red;\">Erreur de connexion WIFI</p></h3>");
+							flagLoading=0;
+						}else if (flagLoading)
+						{
+							client.println("<h3><p style=\"color:green;\">Connexion au wifi en cours...</p></h3>");
 						}
+
 						
 						client.println();
 						client.print("<fieldset>Voici les réseaux disponibles à proximité, choisissez le votre :<br>");
@@ -128,6 +133,7 @@ void ConnectToWifi::accespoint()
 				if (currentLine.indexOf("get?inputSSID=") >= 0)
 				{
 					ClientValue = ClientValue + c;
+					flagLoading=1;
 				}
 			}
 		}
@@ -270,6 +276,7 @@ void ConnectToWifi::setClient()
 
 void ConnectToWifi::connectToServ()
 {
+	flagLoading = 0;
 	//    const uint16_t port = 80;
 	//    const char * host = "192.168.1.1"; // ip or dns
 	//    const uint16_t port = 1337;
@@ -280,7 +287,7 @@ void ConnectToWifi::connectToServ()
 	Serial.print("Connecting to ");
 	Serial.println(host);
 
-	// Use WiFiClient class to create TCP connections
+	// Use WiFiClient class to create TCP Connexions
 	WiFiClient client;
 
 	if (!client.connect(host, port))
